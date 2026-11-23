@@ -1,0 +1,38 @@
+name: MERN CI
+on:
+  push:
+    branches: [mern-migration]
+    paths:
+      - 'mern/**'
+      - '.github/workflows/mern-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'mern/**'
+      - '.github/workflows/mern-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        working-directory: mern
+        run: npm install
+      - name: Run server unit tests
+        working-directory: mern
+        run: npm run test -w server
+      - name: Run client tests
+        working-directory: mern
+        run: npm run test -w client
+      - name: Build React frontend
+        working-directory: mern
+        run: npm run build -w client
+      - name: Check server syntax
+        working-directory: mern
+        run: find server/src -name '*.js' -print0 | xargs -0 -n1 node --check

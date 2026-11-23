@@ -1,0 +1,4 @@
+import mongoose from 'mongoose';
+const o={timestamps:true};
+const BillSchema=new mongoose.Schema({billNumber:{type:String,required:true,unique:true,index:true},lot:{type:mongoose.Schema.Types.ObjectId,ref:'Lot',required:true,unique:true},ticket:{type:mongoose.Schema.Types.ObjectId,ref:'AuctionTicket',required:true},buyer:{type:mongoose.Schema.Types.ObjectId,ref:'Buyer',required:true},farmerName:String,commodity:String,netWeight:Number,rate:Number,grossAmount:Number,sellerDeduction:{type:Number,default:0},farmerNetPayable:Number,buyerMarketFee:{type:Number,default:0},buyerOtherDues:{type:Number,default:0},farmerPaid:{type:Number,default:0},buyerPurchasePaid:{type:Number,default:0},buyerDuesPaid:{type:Number,default:0},farmerPaymentDueAt:Date,dispatchDueAt:Date,buyerCreditDueAt:Date,status:{type:String,enum:['payment_pending','part_paid','paid','cancelled'],default:'payment_pending'}},o);
+export default mongoose.models.SaleBill||mongoose.model('SaleBill',BillSchema);

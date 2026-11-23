@@ -1,0 +1,4 @@
+import mongoose from 'mongoose';
+const o={timestamps:true};
+const ConfigSchema=new mongoose.Schema({key:{type:String,default:'yard',unique:true},committeeName:{type:String,default:'APMC Yard'},yardCode:{type:String,default:'APMC-01'},timezone:{type:String,default:'Asia/Kolkata'},ticketPrefix:{type:String,default:'APMC'},billPrefix:{type:String,default:'SB'},passPrefix:{type:String,default:'GP'},complaintPrefix:{type:String,default:'CMP'},farmerPaymentDays:{type:Number,default:1,min:0,max:60},dispatchDays:{type:Number,default:2,min:0,max:90},defaultBuyerCreditDays:{type:Number,default:5,min:0,max:90},sellerApprovedDeduction:{type:Number,default:0,min:0},buyerMarketFee:{type:Number,default:0,min:0},buyerOtherDues:{type:Number,default:0,min:0},commodities:{type:[String],default:['ઘઉં','કપાસ','જીરું','મગફળી','ડાંગર','બાજરી','ડુંગળી','લીલા શાકભાજી']}},o);
+export default mongoose.models.YardConfig||mongoose.model('YardConfig',ConfigSchema);

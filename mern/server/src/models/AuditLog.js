@@ -1,0 +1,11 @@
+import mongoose from 'mongoose';
+const o={timestamps:true};
+const AuditSchema=new mongoose.Schema({actor:{type:mongoose.Schema.Types.ObjectId,ref:'User',default:null},actorName:String,role:String,action:String,resource:String,resourceId:String,before:mongoose.Schema.Types.Mixed,after:mongoose.Schema.Types.Mixed,reason:String,ipAddress:String},o);
+AuditSchema.pre('findOneAndUpdate',function(){throw new Error('Audit logs are append-only')});
+AuditSchema.pre('updateOne',function(){throw new Error('Audit logs are append-only')});
+AuditSchema.pre('deleteOne',function(){throw new Error('Audit logs are append-only')});
+AuditSchema.pre('deleteMany',function(){throw new Error('Audit logs are append-only')});
+for(const op of ['updateMany','replaceOne','findOneAndReplace','findOneAndDelete'])AuditSchema.pre(op,function(){throw new Error('Audit logs are append-only')});
+AuditSchema.pre('save',function(){if(!this.isNew)throw new Error('Audit logs are append-only')});
+AuditSchema.pre('deleteOne',{document:true,query:false},function(){throw new Error('Audit logs are append-only')});
+export default mongoose.models.AuditLog||mongoose.model('AuditLog',AuditSchema);
