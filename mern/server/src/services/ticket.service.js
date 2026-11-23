@@ -58,8 +58,10 @@ export async function voidTicket(ctx, ticketId, body) {
   if (!ticket || ticket.voidedAt) throw fail(404, 'Active ticket not found');
   const lot = await Lot.findById(ticket.lot);
   if (!lot || lot.billId) throw fail(409, 'A ticket linked to a sale bill cannot be voided');
-  ticket.voidedAt = new Date(); ticket.voidReason = reason; await ticket.save();
-  lot.status = 'arrived'; lot.ticketId = null; lot.buyerId = null; lot.auctionRate = null; await lot.save();
+  await sessionRun(async session => {
+    ticket.voidedAt = new Date(); ticket.voidReason = reason; await ticket.save({ session });
+    lot.status = 'arrived'; lot.ticketId = null; lot.buyerId = null; lot.auctionRate = null; await lot.save({ session });
+  });
   await audit(ctx, 'AUCTION_TICKET_VOIDED', 'AuctionTicket', ticket._id, { ticketNumber: ticket.ticketNumber }, null, reason);
   return ticket;
 }
